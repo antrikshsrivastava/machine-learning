@@ -15,12 +15,14 @@ def eval_fitness_yield(genomes):
 
 def eval_fitness(genomes):
     net_dummy = eval_fitness_yield(genomes)
-    for g in genomes:
+    for i, g in enumerate(genomes):
+        print("Gen: " + str(i))
         net = next(net_dummy)
         sum_square_error = 0.0
-        stupidai = lambda y1, y2: 1 if net.serial_activate([y1, y2]) < 0.5 else -1
+        stupidai = lambda y1, y2: net.serial_activate([y1, y2])
         score = pong_auto1.play(stupidai)
         g.fitness = pong_auto1.bounce1
+        print (g.fitness)
 
 
 local_dir = os.path.dirname(__file__)
@@ -37,9 +39,3 @@ print('Number of evaluations: {0}'.format(pop.total_evaluations))
 
 # Show output of the most fit genome against training data.
 winner = pop.statistics.best_genome()
-print('\nBest genome:\n{!s}'.format(winner))
-print('\nOutput:')
-winner_net = nn.create_feed_forward_phenotype(winner)
-for inputs, expected in zip(xor_inputs, xor_outputs):
-    output = winner_net.serial_activate(inputs)
-    print("expected {0:1.5f} got {1:1.5f}".format(expected, output[0]))

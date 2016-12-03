@@ -49,7 +49,13 @@ def new_game():
 def draw(canvas):
     global score1, score2, paddle1_pos, paddle2_pos, ball_pos, ball_vel, bounce1
     paddle1_vel = stupidai1(paddle1_pos+PAD_HEIGHT/2,ball_pos[1]) * 4
-    paddle2_vel = stupidai2(paddle2_pos+PAD_HEIGHT/2,ball_pos[1]) * 4
+
+    p2_vel = stupidai2(paddle2_pos+PAD_HEIGHT/2,ball_pos[1])
+    print "Input: " + str(paddle2_pos+PAD_HEIGHT/2) + ", " + str(ball_pos[1]) + "->" + str(p2_vel)
+    if (p2_vel < 0.5):
+        paddle2_vel = -4
+    else:
+        paddle2_vel = 4
     # draw mid line and gutters
     canvas.draw_line([WIDTH / 2, 0],[WIDTH / 2, HEIGHT], 1, "White")
     canvas.draw_line([PAD_WIDTH, 0],[PAD_WIDTH, HEIGHT], 1, "White")
@@ -137,12 +143,14 @@ def button_handler():
 
 
 
-frame = simplegui.create_frame("Pong", WIDTH, HEIGHT)
+
 stupidai1 = lambda y1,y2: 1 if y1 < y2 else -1
   
 # start frame
 def play(n):
     global stupidai2
+    global frame
+    frame = simplegui.create_frame("Pong", WIDTH, HEIGHT)
     stupidai2 = n
     frame.set_draw_handler(draw)
     frame.set_keydown_handler(keydown)
