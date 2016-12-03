@@ -8,20 +8,15 @@ from neat import nn, population, statistics
 
 # Network inputs and expected outputs.
 
-def eval_fitness_yield(genomes):
-    for g in genomes:
-        net = nn.create_feed_forward_phenotype(g)
-        yield net
 
 def eval_fitness(genomes):
-    net_dummy = eval_fitness_yield(genomes)
     for i, g in enumerate(genomes):
+        net = nn.create_feed_forward_phenotype(g)
         print("Gen: " + str(i))
-        net = next(net_dummy)
-        sum_square_error = 0.0
         stupidai = lambda y1, y2: net.serial_activate([y1, y2])
-        score = pong_auto1.play(stupidai)
-        g.fitness = pong_auto1.bounce1
+        pong_auto1.play(stupidai)
+        g.fitness = pong_auto1.bounce1 / 6.0
+        pong_auto1.bounce1 = 0
         print (g.fitness)
 
 

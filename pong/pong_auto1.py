@@ -51,8 +51,8 @@ def draw(canvas):
     paddle1_vel = stupidai1(paddle1_pos+PAD_HEIGHT/2,ball_pos[1]) * 4
 
     p2_vel = stupidai2(paddle2_pos+PAD_HEIGHT/2,ball_pos[1])
-    print "Input: " + str(paddle2_pos+PAD_HEIGHT/2) + ", " + str(ball_pos[1]) + "->" + str(p2_vel)
-    if (p2_vel < 0.5):
+    print "Input: " + str(paddle2_pos+PAD_HEIGHT/2) + ", " + str("{0:.2f}".format(ball_pos[1])) + "->" + "{0:.2f}".format(p2_vel[0])
+    if (p2_vel[0] < 0.5):
         paddle2_vel = -4
     else:
         paddle2_vel = 4
@@ -74,6 +74,8 @@ def draw(canvas):
         else:    
             spawn_ball(RIGHT)    
             score2 += 1
+            paddle1_pos = HEIGHT / 2
+            paddle2_pos = HEIGHT / 2
   
   
     elif ball_pos[0] >= WIDTH-BALL_RADIUS:    
@@ -84,7 +86,9 @@ def draw(canvas):
         else:    
             spawn_ball(LEFT)    
             score1 += 1
-  
+            paddle1_pos = HEIGHT / 2
+            paddle2_pos = HEIGHT / 2
+
     ball_pos[0]+=ball_vel[0]/60   
     ball_pos[1]+=ball_vel[1]/60
     # draw ball
