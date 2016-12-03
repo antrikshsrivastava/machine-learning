@@ -15,7 +15,10 @@ def eval_fitness(genomes):
         net = nn.create_feed_forward_phenotype(g)
         stupidai = lambda y1, y2: net.serial_activate([y1, y2])
         pong_auto1.play(stupidai, max_bounces)
-        g.fitness = pong_auto1.bounce1 / (max_bounces)
+        try:
+            g.fitness = pong_auto1.bounce1 / float(pong_auto1.bounce2)
+        except:
+            g.fitness = 0.5
         pong_auto1.bounce1 = 0
         print("Genome: " + str(i))
         print("Fitness: " + str(g.fitness))

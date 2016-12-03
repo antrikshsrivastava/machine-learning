@@ -14,7 +14,7 @@ HALF_PAD_HEIGHT = PAD_HEIGHT / 2
 LEFT = False
 RIGHT = True
 
-MULTIPLIER = 10
+MULTIPLIER = 4
 max_bounces = 3
 # initialize ball_pos and ball_vel for new bal in middle of table
 # if direction is RIGHT, the ball's velocity is upper right, else upper left
@@ -30,7 +30,7 @@ def spawn_ball(direction):
   
 # define event handlers
 def new_game():
-    global paddle1_pos, paddle2_pos, paddle1_vel, paddle2_vel, bounce1  # these are numbers
+    global paddle1_pos, paddle2_pos, paddle1_vel, paddle2_vel, bounce1, bounce2  # these are numbers
     global score1, score2  # these are ints
     paddle1_pos = HEIGHT / 2 
     paddle2_pos = HEIGHT / 2 
@@ -39,6 +39,7 @@ def new_game():
     score1 = 0 
     score2 = 0
     bounce1 = 0
+    bounce2 = 0
   
     if score1 >= score2:  
         spawn_ball(LEFT)  
@@ -48,15 +49,15 @@ def new_game():
 
   
 def draw(canvas):
-    global score1, score2, paddle1_pos, paddle2_pos, ball_pos, ball_vel, bounce1
-    paddle1_vel = MULTIPLIER * stupidai1(paddle1_pos+PAD_HEIGHT/2,ball_pos[1]) * 4
+    global score1, score2, paddle1_pos, paddle2_pos, ball_pos, ball_vel, bounce1, bounce2
+    paddle1_vel = MULTIPLIER * stupidai1(paddle1_pos+PAD_HEIGHT/2,ball_pos[1]) * 6
 
     p2_vel = stupidai2(paddle2_pos+PAD_HEIGHT/2,ball_pos[1])
     print "Input: " + str(paddle2_pos+PAD_HEIGHT/2) + ", " + str("{0:.2f}".format(ball_pos[1])) + "->" + "{0:.2f}".format(p2_vel[0])
     if (p2_vel[0] < 0.5):
-        paddle2_vel = MULTIPLIER * -4
+        paddle2_vel = MULTIPLIER * -6
     else:
-        paddle2_vel = MULTIPLIER * 4
+        paddle2_vel = MULTIPLIER * 6
     # draw mid line and gutters
     canvas.draw_line([WIDTH / 2, 0],[WIDTH / 2, HEIGHT], 1, "White")
     canvas.draw_line([PAD_WIDTH, 0],[PAD_WIDTH, HEIGHT], 1, "White")
@@ -77,6 +78,7 @@ def draw(canvas):
             score2 += 1
             paddle1_pos = HEIGHT / 2
             paddle2_pos = HEIGHT / 2
+            bounce2 += 1
   
   
     elif ball_pos[0] >= WIDTH-BALL_RADIUS:    
@@ -117,7 +119,7 @@ def draw(canvas):
   
 def keydown(key):
     global paddle1_vel, paddle2_vel, MULTIPLIER
-    vel = 4 
+    vel = 6
     if key == simplegui.KEY_MAP['s']:    
         paddle1_vel = vel    
     elif key == simplegui.KEY_MAP['w']:    
@@ -128,10 +130,14 @@ def keydown(key):
         paddle2_vel = vel
     # To slow down game
     elif key == simplegui.KEY_MAP['o']:
-        MULTIPLIER = MULTIPLIER / 2
+        if (MULTIPLIER >= 2):
+            MULTIPLIER = MULTIPLIER / 2
     # To speed up game
     elif key == simplegui.KEY_MAP['p']:
         MULTIPLIER = MULTIPLIER * 2
+    # To skip to next generation
+    elif key == simplegui.KEY_MAP['l']:
+        frame.stop()
   
  #Stop motion paddle       
 def keyup(key):
