@@ -16,7 +16,7 @@ def eval_fitness(genomes):
         stupidai = lambda y1, y2: net.serial_activate([y1, y2])
         pong_auto1.play(stupidai, max_bounces)
         try:
-            g.fitness = pong_auto1.bounce1 / float(pong_auto1.bounce2)
+            g.fitness = pong_auto1.total_bounces_nn / float(max_bounces)
         except:
             g.fitness = 0.5
         pong_auto1.bounce1 = 0

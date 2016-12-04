@@ -49,9 +49,7 @@ def new_game():
 
   
 def draw(canvas):
-    global score1, score2, paddle1_pos, paddle2_pos, ball_pos, ball_vel, bounce1, bounce2
-    paddle1_vel = MULTIPLIER * stupidai1(paddle1_pos+PAD_HEIGHT/2,ball_pos[1]) * 6
-
+    global score1, score2, paddle1_pos, paddle2_pos, ball_pos, ball_vel, bounce1, bounce2, total_bounces_nn, total_bounces_stupid_ai
     p2_vel = stupidai2(paddle2_pos+PAD_HEIGHT/2,ball_pos[1])
     print "Input: " + str(paddle2_pos+PAD_HEIGHT/2) + ", " + str("{0:.2f}".format(ball_pos[1])) + "->" + "{0:.2f}".format(p2_vel[0])
     if (p2_vel[0] < 0.5):
@@ -73,6 +71,7 @@ def draw(canvas):
             ball_vel[0] = ball_vel[0]*1.1   
             ball_vel[1] = ball_vel[1]*1.1
             bounce1 += 1
+            total_bounces_stupid_ai += 1
         else:    
             spawn_ball(RIGHT)    
             score2 += 1
@@ -85,7 +84,8 @@ def draw(canvas):
         if paddle2_pos - HALF_PAD_HEIGHT <= ball_pos[1] <= paddle2_pos + HALF_PAD_HEIGHT:    
             ball_vel[0] = -ball_vel[0]    
             ball_vel[0] = ball_vel[0]*1.1   
-            ball_vel[1] = ball_vel[1]*1.1   
+            ball_vel[1] = ball_vel[1]*1.1
+            total_bounces_nn += 1
         else:    
             spawn_ball(LEFT)    
             score1 += 1
@@ -97,8 +97,10 @@ def draw(canvas):
     # draw ball
     canvas.draw_circle(ball_pos, 20, 1, "Green", "White")
     # update paddle's vertical position, keep paddle on the screen
+    paddle1_pos = ball_pos[1]
     if HALF_PAD_HEIGHT <= paddle1_pos + paddle1_vel <= HEIGHT - HALF_PAD_HEIGHT:  
-        paddle1_pos += paddle1_vel    
+        #paddle1_pos += paddle1_vel
+        pass
     if HALF_PAD_HEIGHT <= paddle2_pos + paddle2_vel <= HEIGHT - HALF_PAD_HEIGHT:  
         paddle2_pos += paddle2_vel 
     # draw paddles
@@ -112,7 +114,7 @@ def draw(canvas):
     canvas.draw_text(str(score1)+"  :  "+str(score2),   
                 (WIDTH / 2 - 36, 40), 36, "Yellow")
     
-    if score1 > max_bounces or score2 > max_bounces :
+    if total_bounces_nn > max_bounces or total_bounces_stupid_ai > max_bounces:
         frame.stop()
         
 
@@ -168,6 +170,9 @@ def play(n, maximum_bounces):
     global stupidai2
     global frame
     global max_bounces
+    global total_bounces_nn, total_bounces_stupid_ai
+    total_bounces_nn = 0
+    total_bounces_stupid_ai = 0
     max_bounces = maximum_bounces
     frame = simplegui.create_frame("Pong", WIDTH, HEIGHT)
     stupidai2 = n
