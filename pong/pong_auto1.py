@@ -14,8 +14,10 @@ HALF_PAD_HEIGHT = PAD_HEIGHT / 2
 LEFT = False
 RIGHT = True
 
-MULTIPLIER = 4
+MULTIPLIER = 2
 max_bounces = 3
+genome = 0
+generation = 0
 # initialize ball_pos and ball_vel for new bal in middle of table
 # if direction is RIGHT, the ball's velocity is upper right, else upper left
 def spawn_ball(direction):
@@ -49,13 +51,16 @@ def new_game():
 
   
 def draw(canvas):
+    global generation, genome
     global score1, score2, paddle1_pos, paddle2_pos, ball_pos, ball_vel, bounce1, bounce2, total_bounces_nn, total_bounces_stupid_ai
     p2_vel = stupidai2(paddle2_pos+PAD_HEIGHT/2,ball_pos[1])
-    print "Input: " + str(paddle2_pos+PAD_HEIGHT/2) + ", " + str("{0:.2f}".format(ball_pos[1])) + "->" + "{0:.2f}".format(p2_vel[0])
+    print "[Generation: " + str(generation) + ", Genome: " + str(genome) + "] - Input: " + str(paddle2_pos+PAD_HEIGHT/2) + ", " + str("{0:.2f}".format(ball_pos[1])) + "->" + "{0:.2f}".format(p2_vel[0])
     if (p2_vel[0] < 0.5):
         paddle2_vel = MULTIPLIER * -6
     else:
         paddle2_vel = MULTIPLIER * 6
+    paddle2_vel = (p2_vel[0] - 0.5) * MULTIPLIER * 12
+
     # draw mid line and gutters
     canvas.draw_line([WIDTH / 2, 0],[WIDTH / 2, HEIGHT], 1, "White")
     canvas.draw_line([PAD_WIDTH, 0],[PAD_WIDTH, HEIGHT], 1, "White")
@@ -166,11 +171,14 @@ def button_handler():
 stupidai1 = lambda y1,y2: 1 if y1 < y2 else -1
   
 # start frame
-def play(n, maximum_bounces):
+def play(n, maximum_bounces, this_generation, this_genome):
     global stupidai2
     global frame
     global max_bounces
     global total_bounces_nn, total_bounces_stupid_ai
+    global generation, genome
+    generation = this_generation
+    genome = this_genome
     total_bounces_nn = 0
     total_bounces_stupid_ai = 0
     max_bounces = maximum_bounces

@@ -7,14 +7,14 @@ import os
 from neat import nn, population, statistics
 
 generation = 0
-max_bounces = 10
+max_bounces = 7
 
 def eval_fitness(genomes):
     global generation
     for i, g in enumerate(genomes):
         net = nn.create_feed_forward_phenotype(g)
         stupidai = lambda y1, y2: net.serial_activate([y1, y2])
-        pong_auto1.play(stupidai, max_bounces)
+        pong_auto1.play(stupidai, max_bounces, generation, i)
         try:
             g.fitness = pong_auto1.total_bounces_nn / float(max_bounces)
         except:
@@ -29,7 +29,7 @@ def eval_fitness(genomes):
 local_dir = os.path.dirname(__file__)
 config_path = os.path.join(local_dir, 'xor2_config')
 pop = population.Population(config_path)
-pop.run(eval_fitness, 100)
+pop.run(eval_fitness, 50)
 
 # Log statistics.
 statistics.save_stats(pop.statistics)
@@ -43,5 +43,5 @@ winner = pop.statistics.best_genome()
 print('\nBest genome:\n{!s}'.format(winner))
 winner_net = nn.create_feed_forward_phenotype(winner)
 best_ai = lambda y1, y2: winner_net.serial_activate([y1, y2])
-pong_auto1.play(best_ai, 1000)
+pong_auto1.play(best_ai, 30, -1, -1)
 
