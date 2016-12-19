@@ -25,10 +25,10 @@ def spawn_ball(direction):
     ball_pos = [WIDTH/2, HEIGHT/2];    
     ball_vel = [MULTIPLIER * random.randrange(120, 240), MULTIPLIER * random.randrange(60, 180)]
     if (direction == RIGHT):  
-        ball_vel[1] = -ball_vel[1]  
+        ball_vel[1] =  (random.randint(0,1)*2 - 1)*ball_vel[1] #either 1 or -1 
     if (direction == LEFT):  
         ball_vel[0] = -ball_vel[0]  
-        ball_vel[1] = -ball_vel[1] 
+        ball_vel[1] =  (random.randint(0,1)*2 - 1)*ball_vel[1] 
   
 # define event handlers
 def new_game():
@@ -53,8 +53,8 @@ def new_game():
 def draw(canvas):
     global generation, genome
     global score1, score2, paddle1_pos, paddle2_pos, ball_pos, ball_vel, bounce1, bounce2, total_bounces_nn, total_bounces_stupid_ai
-    p2_vel = stupidai2(paddle2_pos+PAD_HEIGHT/2,ball_pos[1])
-    print "[Generation: " + str(generation) + ", Genome: " + str(genome) + "] - Input: " + str(paddle2_pos+PAD_HEIGHT/2) + ", " + str("{0:.2f}".format(ball_pos[1])) + "->" + "{0:.2f}".format(p2_vel[0])
+    p2_vel = stupidai2((paddle2_pos+PAD_HEIGHT/2)/HEIGHT,ball_pos[1]/HEIGHT)
+    #print "[Generation: " + str(generation) + ", Genome: " + str(genome) + "] - Input: " + str(paddle2_pos+PAD_HEIGHT/2) + ", " + str("{0:.2f}".format(ball_pos[1])) + "->" + "{0:.2f}".format(p2_vel[0])
     if (p2_vel[0] < 0.5):
         paddle2_vel = MULTIPLIER * -6
     else:
